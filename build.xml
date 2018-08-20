@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ocs-PHP-Jenkins" basedir="" default="build">
+ <property name="build-dir" value="build"/> <!-- name of the directory where we will build logs for example  -->
+ <property name="src-dir" value="${project.basedir}" override="true"/> <!-- name of the source directory  -->
+
+ <target name="build" depends="prepare,phpcs-ci,lint"/> <!-- This target will call all targets in depends parameter  -->
+
+ <target name="clean" description="Cleanup build respositories"> <!-- Delete "logs" directory  -->
+  <delete dir="${build-dir}/logs"/>
+ </target>
+
+ <target name="prepare" depends="clean" description="Prepare for build"> <!-- Create "logs" directory, depend of target "clean"   -->
+  <mkdir dir="${build-dir}/logs"/>
+ </target>
+
+ <target name="lint" depends="lint 5.4.24,lint 5.6.36,lint 7.0.30" description="Check syntax error of php code whith php Lint"/> <!-- call of all lint targets  -->
+
+ <target name="lint 5.4.24"> <!-- PHP Lint 5.4.24 version   -->
+  <apply executable="/opt/php-5.4.24/sapi/cli/php" failonerror="true"> <!-- Commands that will be run -->
+   <arg value="-l" /> <!-- lint options -->
+   <fileset dir="${src-dir}"> <!-- on the source directory -->
+    <include name="**/*.php" /> <!-- include all php files -->
+   </fileset>
+  </apply>  
+ </target>
+
+ <target name="lint 5.6.36"> <!-- PHP Lint 5.6.36 version   -->
+  <apply executable="/opt/php-5.6.36/sapi/cli/php" failonerror="true">
+   <arg value="-l" />
+   <fileset dir="${src-dir}">
+    <include name="**/*.php" />
+   </fileset>
+  </apply>
+ </target>
+
+<target name="lint 7.0.30"> <!-- PHP Lint 7.0.30 version   -->
+  <apply executable="/opt/php-7.0.30/sapi/cli/php" failonerror="true">
+   <arg value="-l" />
+   <fileset dir="${src-dir}">
+    <include name="**/*.php" />
+   </fileset>
+  </apply>
+  <exec command="bash script-lint/lint-7.0.sh" passthru="true"/>
+ </target>
+
+
+<!-- Call of phpcs on all php files, and generate a checkstyle report -->
+<target name="phpcs-ci" description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
+  <exec executable="phpcs"> <!-- Execute PHPCodeSniffer command -->
+   <arg line="--report=checkstyle 
+               --report-file=build/logs/checkstyle.xml 
+               --standard=PEAR
+               --extensions=php *" />
+<!-- report : we give the option report, to generate a report -->
+<!-- report-file : in which file -->
+<!-- standard : the standard code to compare -->
+<!-- extensions : which types of files -->
+  </exec>
+</target>
+
+
+</project>
