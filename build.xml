@@ -41,7 +41,7 @@
     <include name="**/*.php" />
    </fileset>
   </apply>
-  <exec command="bash script-lint/lint-7.0.sh" passthru="true"/>
+  <exec command="bash script/lint-7.0.sh" passthru="true"/>
  </target>
 
 
