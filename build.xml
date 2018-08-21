@@ -35,7 +35,7 @@
  </target>
 
 <target name="lint 7.0.30"> <!-- PHP Lint 7.0.30 version   -->
-  <apply executable="/opt/php-7.0.30/sapi/cli/php" failonerror="true">
+  <apply executable="/opt/php-7.0.30/sapi/cli/php" failonerror="false">
    <arg value="-l" />
    <fileset dir="${src-dir}">
     <include name="**/*.php" />
